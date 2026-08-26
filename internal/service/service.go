@@ -6,6 +6,7 @@ import (
 	"frontend_go/internal/model"
 	"frontend_go/internal/store"
 	"sync"
+	"time"
 )
 
 type Service struct {
@@ -42,6 +43,7 @@ func (s *Service) MarkViewed(ctx context.Context, r model.Record) error {
 	}
 	s.recordMu.Lock()
 	defer s.recordMu.Unlock()
+	time.Sleep(25 * time.Millisecond)
 	s.profileMu.Lock()
 	defer s.profileMu.Unlock()
 	if err := s.Store.PutRecord(r); err != nil {
@@ -65,6 +67,7 @@ func (s *Service) Archive(ctx context.Context, id string) error {
 func (s *Service) ConcurrentMark(ctx context.Context, r model.Record) error {
 	s.profileMu.Lock()
 	defer s.profileMu.Unlock()
+	time.Sleep(25 * time.Millisecond)
 	s.recordMu.Lock()
 	defer s.recordMu.Unlock()
 	return s.Store.PutRecord(r)
